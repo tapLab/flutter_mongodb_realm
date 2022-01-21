@@ -134,7 +134,7 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
 
         val user: User? = app.currentUser()
         val mongoClient =  user?.getMongoClient(
-                "mongodb-atlas"
+            "mongodb-atlas"
         )
 
 
@@ -173,7 +173,7 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
     }
 
     private fun signInWithGoogle(@NonNull call: MethodCall, @NonNull result: Result){
-         val authCode = call.argument<String>("code") ?: ""
+        val authCode = call.argument<String>("code") ?: ""
 
         client.signInWithGoogle(authCode, App.Callback {
             if (it.isSuccess) {
@@ -283,7 +283,7 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
             result.success(true)
         }
         catch (e: AppException){
-           result.error("Error", "Failed to send a reset password email: ${e.message}", null)
+            result.error("Error", "Failed to send a reset password email: ${e.message}", null)
         }
     }
 
@@ -298,9 +298,9 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
 
 
         val task = client.insertDocument(
-                databaseName,
-                collectionName,
-                data
+            databaseName,
+            collectionName,
+            data
         )
 
         if (task == null)
@@ -325,9 +325,9 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
 
 
         val task = client.insertDocuments(
-                databaseName,
-                collectionName,
-                list
+            databaseName,
+            collectionName,
+            list
         )
 
         if (task == null)
@@ -356,9 +356,9 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
 
 
         val task = client.deleteDocument(
-                databaseName,
-                collectionName,
-                filter
+            databaseName,
+            collectionName,
+            filter
         )
 
         if (task == null)
@@ -379,9 +379,9 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
         val filter = call.argument<String>("filter")
 
         val task = client.deleteDocuments(
-                databaseName,
-                collectionName,
-                filter
+            databaseName,
+            collectionName,
+            filter
         )
 
         if (task == null)
@@ -407,12 +407,12 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
         val sort = call.argument<String>("sort")
 
         val task = client.findDocuments(
-                databaseName,
-                collectionName,
-                filter,
-                projection,
-                limit,
-                sort
+            databaseName,
+            collectionName,
+            filter,
+            projection,
+            limit,
+            sort
         )
 
         if (task == null)
@@ -442,10 +442,10 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
         val projection = call.argument<String>("projection")
 
         val task = client.findDocument(
-                databaseName,
-                collectionName,
-                filter,
-                projection
+            databaseName,
+            collectionName,
+            filter,
+            projection
         )
 
         if (task == null)
@@ -467,9 +467,9 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
         val filter = call.argument<String>("filter")
 
         val task = client.countDocuments(
-                databaseName,
-                collectionName,
-                filter
+            databaseName,
+            collectionName,
+            filter
         )
 
         if (task == null)
@@ -492,10 +492,10 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
         val update = call.argument<String>("update")
 
         val task = client.updateDocument(
-                databaseName,
-                collectionName,
-                filter,
-                update!!
+            databaseName,
+            collectionName,
+            filter,
+            update!!
         )
 
         if (task == null)
@@ -517,10 +517,10 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
         val update = call.argument<String>("update")
 
         val task = client.updateDocuments(
-                databaseName,
-                collectionName,
-                filter,
-                update!!
+            databaseName,
+            collectionName,
+            filter,
+            update!!
         )
 
         if (task == null)
@@ -543,9 +543,9 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
 
 
         val task = client.aggregate(
-                databaseName,
-                collectionName,
-                pipelineStrings
+            databaseName,
+            collectionName,
+            pipelineStrings
         )
 
         if (task == null)
@@ -581,28 +581,13 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
             result.error("Error", "Function name is missing", null)
         }
 
-
         try {
-            val funcResult = client.callFunction(functionName!!, args, timeout?.toLong());
-            result.success(funcResult?.toJavaValue())
+            //val funcResult = client.callFunction("getFileUrl", args);
+            val funcResult = client.callFunctionAsync(functionName!!, args, result);
         }
         catch (e: AppException){
-            result.error("Error", "Failed to call function: ${e.message}", "")
+            result.error("Error", "This Failed to call function: ${e.message}", "")
         }
-
-//        val task = client.callFunction(functionName!!, args, timeout?.toLong())
-//
-//        if (task == null)
-//            result.error("Error", "Failed to call function - Task Failed", "")
-//
-//        task!!.addOnCompleteListener {
-//            if (it.isSuccessful) {
-//                result.success(it.result?.toJavaValue())
-//            }
-//            else
-//                result.error("Error", "Failed to call function: ${it.exception?.message}", "")
-//
-//        }
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {

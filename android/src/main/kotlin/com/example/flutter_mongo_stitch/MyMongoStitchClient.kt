@@ -6,6 +6,7 @@ package com.example.flutter_mongo_stitch
 //import com.mongodb.stitch.android.core.auth.StitchUser
 //import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential
 //import com.mongodb.stitch.core.auth.providers.userpassword.UserPasswordCredential
+import android.util.Log
 import java.lang.Exception
 import kotlin.collections.HashMap
 //import com.mongodb.stitch.android.core.auth.providers.userpassword.UserPasswordAuthProviderClient
@@ -29,14 +30,20 @@ import io.realm.mongodb.mongo.options.InsertManyResult
 import io.realm.mongodb.mongo.result.DeleteResult
 import io.realm.mongodb.mongo.result.InsertOneResult
 import io.realm.mongodb.mongo.result.UpdateResult
+import io.flutter.plugin.common.MethodChannel.Result
+
+
+
+
+
 
 // Basic CRUD..
 
 class MyMongoStitchClient(
-        private var client: MongoClient?,
-        private var app: App
+    private var client: MongoClient?,
+    private var app: App
 ) {
- //   private var auth: StitchAuth = app.currentUser()
+    //   private var auth: StitchAuth = app.currentUser()
 
     /** ========================== Auth-related function  ========================= **/
 
@@ -83,7 +90,7 @@ class MyMongoStitchClient(
             = app.loginAsync(Credentials.anonymous(), callback)
 
     fun signInWithUsernamePassword(username: String, password: String, callback: App.Callback<User>)
-                : RealmAsyncTask? {
+            : RealmAsyncTask? {
         return app.loginAsync(Credentials.emailPassword(username, password), callback)
     }
 
@@ -109,7 +116,7 @@ class MyMongoStitchClient(
             = app.currentUser()?.logOutAsync(callback);
 
     fun registerWithEmail(email: String, password: String, callback: App.Callback<Void>)
-                : RealmAsyncTask? {
+            : RealmAsyncTask? {
 //        val emailPassClient = auth.getProviderClient(
 //                UserPasswordAuthProviderClient.factory
 //        )
@@ -130,7 +137,7 @@ class MyMongoStitchClient(
             : RealmResultTask<InsertOneResult>? {
         val collection = getCollection(databaseName, collectionName)
 
-        
+
         //Document.parse(json)
         val document = Document()
 
@@ -149,7 +156,7 @@ class MyMongoStitchClient(
         val collection = getCollection(databaseName, collectionName)
 
         if (list == null)
-          return null
+            return null
 
         val documents = list.map {
             Document.parse(it)
@@ -174,7 +181,7 @@ class MyMongoStitchClient(
     fun deleteDocuments(databaseName: String?, collectionName: String?, filterJson: String?)
             : RealmResultTask<DeleteResult>? {
         val collection = getCollection(databaseName, collectionName)
-        
+
         if (filterJson == null)
             return collection?.deleteMany(BsonDocument())
 
@@ -185,12 +192,12 @@ class MyMongoStitchClient(
     /*******************************************************************************/
 
     fun findDocuments(
-            databaseName: String?,
-            collectionName: String?,
-            filterJson: String?,
-            projectionJson: String?,
-            limit: Int?,
-            sortJson: String?
+        databaseName: String?,
+        collectionName: String?,
+        filterJson: String?,
+        projectionJson: String?,
+        limit: Int?,
+        sortJson: String?
     ): FindIterable<Document>? {
         val collection = getCollection(databaseName, collectionName)
 
@@ -256,7 +263,7 @@ class MyMongoStitchClient(
 
         if (filterJson == null)
             return collection?.count()
-        
+
         val filter = BsonDocument.parse(filterJson)
         return collection?.count(filter)
     }
@@ -288,7 +295,7 @@ class MyMongoStitchClient(
 
     //?
     fun watchCollection(
-            databaseName: String?, collectionName: String?, filterJson: String?, ids: List<String>?, asObjectIds: Boolean
+        databaseName: String?, collectionName: String?, filterJson: String?, ids: List<String>?, asObjectIds: Boolean
     ): RealmEventStreamAsyncTask<Document>? {
         val collection = getCollection(databaseName, collectionName)
 
@@ -313,7 +320,7 @@ class MyMongoStitchClient(
 
 
     fun aggregate(databaseName: String?, collectionName: String?, pipelineStrings: List<String>?)
-                : AggregateIterable<Document>? {
+            : AggregateIterable<Document>? {
         val collection = getCollection(databaseName, collectionName)
 
         val pipeline = pipelineStrings?.map {
@@ -323,16 +330,26 @@ class MyMongoStitchClient(
         return collection?.aggregate(pipeline)
     }
 
+    fun callFunctionAsync(name: String, args: List<Any>?, resultListener: Result?)
+    {
+        val functionsManager: Functions = app.getFunctions(app.currentUser())
+        functionsManager.callFunctionAsync(name, args, BsonValue::class.java) { result ->
+            if (result.isSuccess) {
+                resultListener?.success(result.get().toJavaValue())
+            } else {
+                Log.e("EXAMPLE", "failed to call sum function with: " + result.error)
+            }
+        }
+    }
+
     fun callFunction(name: String, args: List<Any>?, requestTimeout: Long?)
             : BsonValue? {
 
         val functionsManager: Functions = app.getFunctions(app.currentUser())
-
         return functionsManager.callFunction(
-                name,
-                args ?: emptyList<Any>(),
-//                requestTimeout ?: 15*1000,
-                BsonValue::class.java
+            name,
+            args ?: emptyList<Any>(),
+            BsonValue::class.java
         )
     }
 
