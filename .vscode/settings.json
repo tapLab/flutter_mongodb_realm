@@ -1,0 +1,18 @@
+{
+  "dart.flutterRunAdditionalArgs": [
+    "--no-sound-null-safety"
+  ],
+  "dart.flutterTestAdditionalArgs": [
+    "--no-sound-null-safety",
+    "--concurrency=1"
+  ],
+  "dart.flutterSdkPath": "/Users/swilhelm/fvm/versions/2.10.5",
+    // Remove .fvm files from search
+    "search.exclude": {
+      "**/.fvm": true
+    },
+    // Remove from file watching
+    "files.watcherExclude": {
+      "**/.fvm": true
+    }
+}

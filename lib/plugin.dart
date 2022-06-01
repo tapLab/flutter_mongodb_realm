@@ -5,7 +5,6 @@ import 'package:bson/bson.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_mongodb_realm/stream_interop/stream_interop.dart';
 import 'package:flutter_mongo_stitch_platform_interface/flutter_mongo_stitch_platform_interface.dart';
-import 'package:meta/meta.dart';
 import 'package:universal_html/html.dart';
 
 import 'auth/core_realm_user.dart';

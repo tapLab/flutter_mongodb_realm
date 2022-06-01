@@ -4,38 +4,36 @@ version: 1.2.4
 homepage: https://github.com/kfiross/flutter_mongo_stitch
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.12.0 <2.0.0"
+    sdk: ">=2.7.0 <3.0.0"
+    flutter: ">=1.12.0 <2.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
+    flutter:
+        sdk: flutter
 
-  flutter_mongo_stitch_platform_interface: ^1.2.1
-  # The design on https://flutter.dev/go/federated-plugins was to leave
-  # this constraint as "any". We cannot do it right now as it fails pub publish
-  # validation, so we set a ^ constraint.
-  flutter_mongo_stitch_web: ^0.3.2
+    flutter_mongo_stitch_platform_interface: ^1.2.1
+    # The design on https://flutter.dev/go/federated-plugins was to leave
+    # this constraint as "any". We cannot do it right now as it fails pub publish
+    # validation, so we set a ^ constraint.
+    flutter_mongo_stitch_web: ^0.3.2
 
-
-  universal_html: ^1.2.4      # instead importing in runtime
-  bson: ^0.3.4
-  extension: ^0.1.1
-  streams_channel: ^0.3.0
-  meta: ^1.0.4
+    universal_html: ^1.2.4 # instead importing in runtime
+    bson: ^0.3.4
+    extension: ^0.1.1
+    streams_channel: ^0.3.0
+    meta: ^1.0.4
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
+    flutter_test:
+        sdk: flutter
 
 flutter:
-  plugin:
-    platforms:
-      android:
-        package: com.example.flutter_mongo_stitch
-        pluginClass: FlutterMongoStitchPlugin
-      ios:
-        pluginClass: FlutterMongoStitchPlugin
-      web:
-        default_package: flutter_mongo_stitch_web
+    plugin:
+        platforms:
+            android:
+                package: com.example.flutter_mongo_stitch
+                pluginClass: FlutterMongoStitchPlugin
+            ios:
+                pluginClass: FlutterMongoStitchPlugin
+            web:
+                default_package: flutter_mongo_stitch_web
