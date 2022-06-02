@@ -21,7 +21,6 @@ class _LoginPageState extends State<ResultPage> {
 
   @override
   void initState() {
-    print('xxx ResultPage');
     _authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     _realmTestBloc = BlocProvider.of<RealmTestBloc>(context);
     super.initState();
@@ -127,9 +126,14 @@ class _LoginPageState extends State<ResultPage> {
                                     ),
                                   ),
                                 ),
-                                Text('userData id: ${state.userData!.id}'),
-                                Text(
-                                    'userdata name: ${state.userData!.profile!.fullname}'),
+                                if (state.userData != null) ...[
+                                  Text('userData id: ${state.userData!.id}'),
+                                  Text(
+                                      'userdata name: ${state.userData!.profile!.fullname}'),
+                                ],
+                                if (state.stringResponse != null)
+                                  Text(
+                                      'response (string): ${state.stringResponse}'),
                                 SizedBox(height: 40.0),
                                 PrimaryButtonBlue(
                                   text: 'back to realm test selection',

@@ -16,10 +16,22 @@ class RealmTestBloc extends Bloc<RealmTestEvent, RealmTestState> {
       if (event is GetUserData) {
         emit(RealmResponseLoading());
         final UserData? userData = await realmRepository.getUserData();
-        print('xxx RealmResponseLoaded');
+        print('RealmTestBloc -> RealmResponseLoaded (GetUserData)');
 
         emit(RealmResponseLoaded(
           userData: userData,
+        ));
+      }
+
+      if (event is GetFileUrl) {
+        emit(RealmResponseLoading());
+        String path = event.path;
+        final String stringResponse =
+            await realmRepository.getRemoteFileUrl({'path': path});
+        print('RealmTestBloc -> RealmResponseLoaded (GetFileUrl)');
+
+        emit(RealmResponseLoaded(
+          stringResponse: stringResponse,
         ));
       }
     });
@@ -31,6 +43,10 @@ class RealmTestBloc extends Bloc<RealmTestEvent, RealmTestState> {
 
   void getUserData() {
     add(GetUserData());
+  }
+
+  void getFileUrl({required String path}) {
+    add(GetFileUrl(path: path));
   }
 
   void init() {

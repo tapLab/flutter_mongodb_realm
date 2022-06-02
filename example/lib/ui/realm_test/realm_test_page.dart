@@ -21,7 +21,6 @@ class _RealmTestPageState extends State<RealmTestPage> {
 
   @override
   void initState() {
-    print('xxx RealmTestPage');
     _authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     _realmTestBloc = BlocProvider.of<RealmTestBloc>(context);
     super.initState();
@@ -97,6 +96,11 @@ class _RealmTestPageState extends State<RealmTestPage> {
                           PrimaryButtonGreen(
                             text: 'callFunction getUserData',
                             onPressed: () => _realmTestBloc.getUserData(),
+                          ),
+                          PrimaryButtonGreen(
+                            text: 'callFunction getFileUrl',
+                            onPressed: () =>
+                                _realmTestBloc.getFileUrl(path: 'sunjpg.jpg'),
                           ),
                           SizedBox(height: 80.0),
                           PrimaryButtonBlue(

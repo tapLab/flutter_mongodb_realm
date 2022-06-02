@@ -112,6 +112,7 @@ enum MyError : Error {
 
 
 class MyMongoStitchClient {
+    var newRealmStyleMode: Bool = true
     var client: RemoteMongoClient
     var appClient: StitchAppClient
     var app: App
@@ -153,16 +154,20 @@ class MyMongoStitchClient {
         onError: @escaping (String?)->Void
     ) {
 
-        guard false/*#available(iOS 13.0, *)*/ else{
+
+        guard self.newRealmStyleMode/*#available(iOS 13.0, *)*/ else{
+            print("try to signInWithUsernamePassword in old realm style (with stitch)")
             self.signInWithUsernamePassword_s(username: username, password: password, onCompleted: onCompleted, onError: onError)
             return
         }
-        
+
+        print("try to signInWithUsernamePassword in new realm style (without stitch)")
         self.app.login(
             credentials: Credentials.emailPassword(email: username, password: password)
         ) { authResult in
             switch authResult {
             case .success(let user):
+                print("signInWithUsernamePassword in new realm style (without stitch) -> success")
                 onCompleted(user.toMap())
                 break
                 
@@ -736,34 +741,117 @@ class MyMongoStitchClient {
     }
     
     
-    func callFunction(name: String,
+    func callFunction(useStitch: Bool,
+                      name: String,
                       args: Array<Any>?,
                       requestTimeout: Int64?,
                       onCompleted: @escaping (Any)->Void,
                       onError: @escaping (String?)->Void
-        ){
-        
-        var argsBson = [BSONValue]()
-        args?.forEach { value in
-            argsBson.append(BsonExtractor.getValue(of: value) ?? "")
+        ) {
+        guard let user = self.app.currentUser else {
+            fatalError("yyy Logged out?")
         }
-        
-        var timeoutInSeconds:TimeInterval = 15
-        if (requestTimeout != nil){
-            timeoutInSeconds = Double(requestTimeout!)/1000.0
-        }
-        
-        self.appClient.callFunction(
-            withName: name,
-            withArgs: argsBson,
-            withRequestTimeout: timeoutInSeconds ){ (result: StitchResult<AnyBSONValue>) in
-            
-                switch result {
-                case .success(let data):
-                    onCompleted(data.value)//toSimpleType())
-                case .failure(let error):
-                    onError("Failed to call function: \(error)")
+
+        if (useStitch == true) {
+            // use old stitch lib
+            var timeoutInSeconds:TimeInterval = 15
+            if (requestTimeout != nil){
+                timeoutInSeconds = Double(requestTimeout!)/1000.0
             }
+
+            var argsBson = [BSONValue]()
+            args?.forEach { value in
+                argsBson.append(BsonExtractor.getValue(of: value) ?? "")
+            }
+
+            self.appClient.callFunction(
+                withName: name,
+                withArgs: argsBson,
+                withRequestTimeout: timeoutInSeconds ){ (result: StitchResult<AnyBSONValue>) in
+
+                    print("callFunction, result: \(result as StitchResult<AnyBSONValue>)")
+                    switch result {
+                    case .success(let data):
+                        onCompleted(data.value)//toSimpleType())
+                    case .failure(let error):
+                        onError("Failed to call function: \(error)")
+                }
+            }
+        } else {
+            // use new realm lib
+            var argsBson = [AnyBSON]()
+            args?.forEach { value in
+                //argsBson.append(value as! AnyBSON)
+                print("callFunction args value: \(value)")
+                argsBson.append(AnyBSON(stringLiteral: self.stringFromAny(value)))
+            }
+
+            switch name {
+            case "getUserData":
+                    user.functions.getUserData(argsBson) { (result, error) in
+                        self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
+                    }
+            case "getFileUrl":
+                    user.functions.getFileUrl(argsBson) { (result, error) in
+                        self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
+                    }
+            case "getCoursesJson":
+                user.functions.getCoursesJson(argsBson) { (result, error) in
+                    self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
+                }
+            case "createUser":
+                user.functions.createUser(argsBson) { (result, error) in
+                    self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
+                }
+            case "setNotifications":
+                user.functions.setNotifications(argsBson) { (result, error) in
+                    self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
+                }
+            case "resetCourseProgress":
+                user.functions.resetCourseProgress(argsBson) { (result, error) in
+                    self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
+                }
+            case "setCourseUnitCompleted":
+                user.functions.setCourseUnitCompleted(argsBson) { (result, error) in
+                    self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
+                }
+            case "registerDeviceToken":
+                user.functions.registerDeviceToken(argsBson) { (result, error) in
+                    self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
+                }
+            default: break
+            }
+        }
+    }
+
+    private func stringFromAny(_ value:Any?) -> String {
+        if let nonNil = value, !(nonNil is NSNull) {
+            return String(describing: nonNil)
+        }
+        return ""
+    }
+    
+    private func evaluateAndConvertResponse(
+        error: Any?,
+        result: AnyBSON?,
+        onCompleted: @escaping (Any)->Void,
+        onError: @escaping (String?)->Void
+    ) {
+        DispatchQueue.main.async {
+            guard error == nil else {
+                onError("getUserData error: call failed")
+                return
+            }
+            guard result?.isNull == false else  {
+                onError("getUserData error: Unexpected null result")
+                return
+            }
+            
+            let convertedResult = result?.stringValue ?? ""
+
+            print("evaluateAndConvertResponse result: \(convertedResult)")
+            onCompleted(convertedResult)
+            return
         }
     }
     

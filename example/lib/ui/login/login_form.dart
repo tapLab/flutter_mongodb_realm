@@ -28,9 +28,8 @@ class _LoginFormState extends State<LoginForm> {
   @override
   void initState() {
     if (kDebugMode) {
-      print('xxx is in debug mode');
-      _usernameController.text = ''; // preset user name
-      _passwordController.text = ''; // preset password
+      _usernameController.text = ''; // insert preset user name here...
+      _passwordController.text = ''; // insert preset password here...
     }
     super.initState();
   }

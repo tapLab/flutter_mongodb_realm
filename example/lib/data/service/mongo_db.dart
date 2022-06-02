@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_mongodb_realm_example/ui/layout/approve_modal.dart';
 import 'package:flutter_mongodb_realm_example/data/model/app_user.dart';
 import 'package:flutter_mongodb_realm_example/data/model/user_data.dart';
@@ -36,7 +37,8 @@ class MongoDB {
     if (context == GlobalKeyService.splashPageKey.currentContext) {
       pageName = 'splashPage';
     }
-    print('xxx $title -> $text, pageName: $pageName');
+    print(
+        'showDebugInfoAlert (mongo_db.dart): $title -> $text, pageName: $pageName');
 
     if (debugAlert) {
       if (context != null) {
@@ -58,6 +60,7 @@ class MongoDB {
 
     try {
       return showDebugInfoAlert(text: 'getUserData').then((value) async {
+        print('callFunction getUserData (mongo_db.dart)');
         String userDataJsonStr =
             await _client.callFunction('getUserData', args: []);
         String showText = userDataJsonStr;
@@ -68,7 +71,8 @@ class MongoDB {
             .then((value) async {
           Map<String, dynamic> userDataJson = jsonDecode(userDataJsonStr);
           userData = UserData.fromJson(userDataJson);
-          print('xxx getUserData returns: $userDataJson');
+          print(
+              'callFunction getUserData (mongo_db.dart) returns: $userDataJson');
           return userData;
         });
       });
@@ -82,6 +86,24 @@ class MongoDB {
         return userData;
       });
     }
+  }
+
+  Future<dynamic> getFileUrl(Map<String, dynamic> file) async {
+    String fileUrl = '';
+
+    try {
+      return showDebugInfoAlert(text: 'getFileUrl').then((value) async {
+        fileUrl = await _client
+            .callFunction('getFileUrl', args: ['{"path":"${file['path']}"}']);
+
+        return fileUrl;
+      });
+    } on PlatformException catch (e) {
+      print("getFileUrl (mongo_db.dart) Error: ${e.message}");
+      print('getFileUrl (mongo_db.dart) Error string: ${e.toString()}');
+    }
+
+    return fileUrl;
   }
 
   ///
@@ -116,15 +138,14 @@ class MongoDB {
 
   Future<AppUser> getUser() async {
     try {
-      print('xxx getUser -> _app.currentUser: $_app');
+      print('getUser (mongo_db.dart) -> _app.currentUser: $_app');
       CoreRealmUser? realmUser = await _app.currentUser;
-      print('xxx getUser -> after _app.currentUser');
       if (realmUser != null) {
-        print('xxx getUser -> realmUser is not null, realmUser: $realmUser');
+        print('getUser -> realmUser: $realmUser');
         return AppUser(realmUser: realmUser);
       }
     } catch (e) {
-      log('xxx hasNoUser: ' +
+      log('[MongoDB] hasNoUser: ' +
           e.toString()); // on iOS on Login page after login: hasNoUser: type 'List<Object?>' is not a subtype of type 'LinkedHashMap<dynamic, dynamic>?' in type cast
     }
     throw MongoDBException('has no user');

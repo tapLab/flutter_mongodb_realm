@@ -15,3 +15,15 @@ class GetUserData extends RealmTestEvent {
   @override
   String toString() => 'GetUserData';
 }
+
+class GetFileUrl extends RealmTestEvent {
+  final String path;
+
+  GetFileUrl({required this.path});
+
+  @override
+  String toString() => 'GetFileUrl';
+
+  @override
+  List<Object> get props => [path];
+}

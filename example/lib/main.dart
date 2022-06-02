@@ -38,7 +38,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    print('xxx MyApp');
     super.initState();
     init();
   }

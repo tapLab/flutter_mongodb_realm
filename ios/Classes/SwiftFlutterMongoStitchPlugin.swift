@@ -7,7 +7,6 @@ import StitchCore
 import StitchRemoteMongoDBService
 import RealmSwift
 
-
 public class SwiftFlutterMongoStitchPlugin: NSObject, FlutterPlugin {
     var client: MyMongoStitchClient?
     
@@ -619,15 +618,25 @@ public class SwiftFlutterMongoStitchPlugin: NSObject, FlutterPlugin {
     func callFunction(call: FlutterMethodCall, result: @escaping FlutterResult)  {
         let callArgs = call.arguments as! Dictionary<String, Any>
         
-        let name = callArgs["name"] as? String
+        var useStitch = false
+        var name = callArgs["name"] as? String
         let args = callArgs["args"] as? Array<Any>
         let timeout = callArgs["timeout"] as? Int64
-        
+          
         if(name == nil || name!.isEmpty){
             result(FlutterError(code: "ERROR", message: "", details: nil))
+        } else {
+            if (name!.hasPrefix("stitch_")) {
+                useStitch = true
+                name = String(Array(name!)[7...])
+            }
         }
         
+        print("callFunction (SwiftFlutterMongoStitchPlugin.swift), useStitch: \(useStitch), name: \(name!)")
+
+        // call in MyMongoStitchClient
         self.client?.callFunction(
+            useStitch: useStitch,
             name: name!,
             args: args,
             requestTimeout: timeout,

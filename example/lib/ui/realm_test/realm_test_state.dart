@@ -3,14 +3,17 @@ import 'package:equatable/equatable.dart';
 
 abstract class RealmTestState extends Equatable {
   final UserData? userData;
+  final String? stringResponse;
 
   const RealmTestState({
     this.userData,
+    this.stringResponse,
   });
 
   @override
   List<Object> get props => [
         userData ?? Object,
+        stringResponse ?? '',
       ];
 }
 
@@ -18,6 +21,7 @@ class RealmTestUninitialized extends RealmTestState {
   const RealmTestUninitialized()
       : super(
           userData: null,
+          stringResponse: null,
         );
 
   @override
@@ -28,6 +32,7 @@ class RealmResponseLoading extends RealmTestState {
   const RealmResponseLoading()
       : super(
           userData: null,
+          stringResponse: null,
         );
 
   @override
@@ -36,10 +41,11 @@ class RealmResponseLoading extends RealmTestState {
 
 class RealmResponseLoaded extends RealmTestState {
   const RealmResponseLoaded({
-    user,
     userData,
+    stringResponse,
   }) : super(
           userData: userData,
+          stringResponse: stringResponse,
         );
 
   @override

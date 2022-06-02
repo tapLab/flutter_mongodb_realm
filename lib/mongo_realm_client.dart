@@ -23,13 +23,15 @@ class MongoRealmClient {
     return MongoDatabase(name);
   }
 
-  /// Calls the specified Stitch function
+  /// Calls the specified Realm or Stitch function
   Future callFunction(String name, {List args, int requestTimeout}) async {
+    print('callFunction $name (mongo_realm_client.dart)');
     var result = await FlutterMongoRealm.callFunction(
       name,
       args: args,
       requestTimeout: requestTimeout,
     );
+    print('callFunction $name (mongo_realm_client.dart), result: $result');
 
     return result;
   }

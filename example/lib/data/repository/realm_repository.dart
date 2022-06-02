@@ -21,6 +21,10 @@ class RealmRepository {
     });
   }
 
+  Future<dynamic> getRemoteFileUrl(Map<String, dynamic> file) {
+    return mongoDB.getFileUrl(file);
+  }
+
   Future<void> logout() async {
     return mongoDB.logout();
   }

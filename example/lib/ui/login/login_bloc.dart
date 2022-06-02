@@ -19,7 +19,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     // ============= //
 
     on<LoginEvent>((event, emit) async {
-      print('xxx LoginEvent: $event');
+      print('LoginEvent: $event');
 
       if (event is SetLoadingState) {
         emit(const LoginLoading());
