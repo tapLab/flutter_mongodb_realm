@@ -155,7 +155,7 @@ class MyMongoStitchClient {
     ) {
 
 
-        guard self.newRealmStyleMode/*#available(iOS 13.0, *)*/ else{
+        guard self.newRealmStyleMode == false else{
             print("try to signInWithUsernamePassword in old realm style (with stitch)")
             self.signInWithUsernamePassword_s(username: username, password: password, onCompleted: onCompleted, onError: onError)
             return
