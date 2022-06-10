@@ -785,41 +785,10 @@ class MyMongoStitchClient {
                 print("callFunction args value: \(value)")
                 argsBson.append(AnyBSON(stringLiteral: self.stringFromAny(value)))
             }
-
-            switch name {
-            case "getUserData":
-                    user.functions.getUserData(argsBson) { (result, error) in
-                        self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
-                    }
-            case "getFileUrl":
-                    user.functions.getFileUrl(argsBson) { (result, error) in
-                        self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
-                    }
-            case "getCoursesJson":
-                user.functions.getCoursesJson(argsBson) { (result, error) in
-                    self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
-                }
-            case "createUser":
-                user.functions.createUser(argsBson) { (result, error) in
-                    self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
-                }
-            case "setNotifications":
-                user.functions.setNotifications(argsBson) { (result, error) in
-                    self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
-                }
-            case "resetCourseProgress":
-                user.functions.resetCourseProgress(argsBson) { (result, error) in
-                    self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
-                }
-            case "setCourseUnitCompleted":
-                user.functions.setCourseUnitCompleted(argsBson) { (result, error) in
-                    self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
-                }
-            case "registerDeviceToken":
-                user.functions.registerDeviceToken(argsBson) { (result, error) in
-                    self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
-                }
-            default: break
+            
+            // dynamic realm user function call
+            user.functions[dynamicMember: name](argsBson) { (result, error) in
+                self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
             }
         }
     }
