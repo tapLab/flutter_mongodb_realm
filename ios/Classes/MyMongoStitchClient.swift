@@ -154,7 +154,7 @@ class MyMongoStitchClient {
         onError: @escaping (String?)->Void
     ) {
 
-
+        print("newRealmStyleMode: \(self.newRealmStyleMode)")
         guard self.newRealmStyleMode == false else{
             print("try to signInWithUsernamePassword in old realm style (with stitch)")
             self.signInWithUsernamePassword_s(username: username, password: password, onCompleted: onCompleted, onError: onError)
@@ -749,7 +749,7 @@ class MyMongoStitchClient {
                       onError: @escaping (String?)->Void
         ) {
         guard let user = self.app.currentUser else {
-            fatalError("yyy Logged out?")
+            fatalError("oha Logged out?")
         }
 
         if (useStitch == true) {
