@@ -317,11 +317,11 @@ class MyMongoStitchClient {
     }
     
     func getUser() -> StitchUser? {
-        return self.auth.currentUser //self.app.currentUser
+        return self.app.currentUser
     }
     
     func getUserId() -> String? {
-        return self.auth.currentUser?.id // self.app.currentUser?.id
+        return self.app.currentUser?.id
     }
     
     // MARK: Database (MongoDB Atlas)
