@@ -114,6 +114,7 @@ class MongoDB {
 
   Future<AppUser> authenticate(
       {required String username, required String password}) async {
+    print('yyy mongodb login');
     await _app.login(Credentials.emailPassword(username, password));
 
     return await getUser();
@@ -121,6 +122,7 @@ class MongoDB {
 
   Future<void> logout() async {
     try {
+      print('yyy mongodb logout');
       await _app.logout();
     } catch (e) {
       print('logout error -> maybe offline?, error: $e');

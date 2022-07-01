@@ -112,7 +112,6 @@ enum MyError : Error {
 
 
 class MyMongoStitchClient {
-    var newRealmStyleMode: Bool = true
     var client: RemoteMongoClient
     var appClient: StitchAppClient
     var app: App
@@ -129,12 +128,7 @@ class MyMongoStitchClient {
         onCompleted: @escaping ([String:Any])->Void,
         onError: @escaping (String?)->Void
     ) {
-        guard false/*#available(iOS 13.0, *)*/ else{
-            self.signInAnonymously_s(onCompleted: onCompleted, onError: onError)
-            return
-        }
-        
-        self.app.login(credentials: Credentials.anonymous) { authResult in
+         self.app.login(credentials: Credentials.anonymous) { authResult in
             switch authResult {
             case .success(let user):
                 onCompleted(user.toMap())
@@ -153,21 +147,13 @@ class MyMongoStitchClient {
         onCompleted: @escaping ([String:Any])->Void,
         onError: @escaping (String?)->Void
     ) {
-
-        print("newRealmStyleMode: \(self.newRealmStyleMode)")
-        guard self.newRealmStyleMode == false else{
-            print("try to signInWithUsernamePassword in old realm style (with stitch)")
-            self.signInWithUsernamePassword_s(username: username, password: password, onCompleted: onCompleted, onError: onError)
-            return
-        }
-
-        print("try to signInWithUsernamePassword in new realm style (without stitch)")
+        print("signInWithUsernamePassword (MyMongoStitchClient.swift)")
         self.app.login(
             credentials: Credentials.emailPassword(email: username, password: password)
         ) { authResult in
             switch authResult {
             case .success(let user):
-                print("signInWithUsernamePassword in new realm style (without stitch) -> success")
+                print("signInWithUsernamePassword in new realm style (without stitch) -> success (MyMongoStitchClient.swift)")
                 onCompleted(user.toMap())
                 break
                 
@@ -183,12 +169,6 @@ class MyMongoStitchClient {
         onCompleted: @escaping ([String:Any])->Void,
         onError: @escaping (String?)->Void
         ) {
-        
-        guard false/*#available(iOS 13.0, *)*/ else{
-            self.signInWithGoogle_s(authCode: authCode, onCompleted: onCompleted, onError: onError)
-            return
-        }
-        
         self.app.login(
             credentials: Credentials.google(serverAuthCode: authCode)
         ) { authResult in
@@ -210,12 +190,6 @@ class MyMongoStitchClient {
         onCompleted: @escaping ([String:Any])->Void,
         onError: @escaping (String?)->Void
         ) {
-        
-        guard false/*#available(iOS 13.0, *)*/ else{
-            self.signInWithFacebook_s(accessToken: accessToken, onCompleted: onCompleted, onError: onError)
-            return
-        }
-        
         self.app.login(
             credentials: Credentials.facebook(accessToken: accessToken)
         ) { authResult in
@@ -231,32 +205,26 @@ class MyMongoStitchClient {
         }
     }
     
-    // todo: check this
+    // todo: check this (added toMap() in onCompleted, but maybe its not correct)
     func signInWithJWT(
         accessToken: String,
         onCompleted: @escaping ([String:Any])->Void,
         onError: @escaping (String?)->Void
         ){
-        
-        guard false else {
-            self.signInWithJWT_s(accessToken: accessToken, onCompleted: onCompleted, onError: onError)
-            return
+        self.app.login(
+            credentials: Credentials.jwt(token: accessToken)
+        ) { authResult in
+            switch(authResult){
+            case .success(let user):
+                onCompleted(user.toMap())
+                break
+
+            case .failure(let error):
+                onError("JWT Provider Login failed \(error)")
+                break
+
+            }
         }
-        
-//        self.app.login(
-//            credentials: Credentials.jwt(token: accessToken)
-//        ) { authResult in
-//            switch(authResult){
-//            case .success(let user):
-//                onCompleted(user)
-//                break
-//
-//            case .failure(let error):
-//                onError("JWT Provider Login failed \(error)")
-//                break
-//
-//            }
-//        }
     }
     
     func signInWithCustomFunction(
@@ -264,12 +232,6 @@ class MyMongoStitchClient {
         onCompleted: @escaping ([String:Any])->Void,
         onError: @escaping (String?)->Void
         ){
-        
-        guard false else {
-            self.signInWithCustomFunction_s(json: json, onCompleted: onCompleted, onError: onError)
-            return
-        }
-        
 //        self.app.login(
 //            credentials: Credentials.function(payload: payload)
 //        ) { authResult in
@@ -314,11 +276,6 @@ class MyMongoStitchClient {
         onCompleted: @escaping (Bool)->Void,
         onError: @escaping (String?)->Void
     ) {
-        guard false/*#available(iOS 13.0, *)*/ else{
-            self.logout_s(onCompleted: onCompleted, onError: onError)
-            return
-        }
-        
         self.app.currentUser?.logOut(
             completion: { error in
                 guard error == nil else {
@@ -327,6 +284,7 @@ class MyMongoStitchClient {
                 }
                 
                 onCompleted(true)
+                print("logout successfully (MyMongoStitchClient.swift)")
             }
         )
     }
@@ -741,55 +699,26 @@ class MyMongoStitchClient {
     }
     
     
-    func callFunction(useStitch: Bool,
-                      name: String,
+    func callFunction(name: String,
                       args: Array<Any>?,
                       requestTimeout: Int64?,
                       onCompleted: @escaping (Any)->Void,
                       onError: @escaping (String?)->Void
         ) {
         guard let user = self.app.currentUser else {
-            fatalError("oha Logged out?")
+            fatalError("Logged out? (MyMongoStitchClient.swift)")
         }
-
-        if (useStitch == true) {
-            // use old stitch lib
-            var timeoutInSeconds:TimeInterval = 15
-            if (requestTimeout != nil){
-                timeoutInSeconds = Double(requestTimeout!)/1000.0
-            }
-
-            var argsBson = [BSONValue]()
-            args?.forEach { value in
-                argsBson.append(BsonExtractor.getValue(of: value) ?? "")
-            }
-
-            self.appClient.callFunction(
-                withName: name,
-                withArgs: argsBson,
-                withRequestTimeout: timeoutInSeconds ){ (result: StitchResult<AnyBSONValue>) in
-
-                    print("callFunction, result: \(result as StitchResult<AnyBSONValue>)")
-                    switch result {
-                    case .success(let data):
-                        onCompleted(data.value)//toSimpleType())
-                    case .failure(let error):
-                        onError("Failed to call function: \(error)")
-                }
-            }
-        } else {
-            // use new realm lib
-            var argsBson = [AnyBSON]()
-            args?.forEach { value in
-                //argsBson.append(value as! AnyBSON)
-                print("callFunction args value: \(value)")
-                argsBson.append(AnyBSON(stringLiteral: self.stringFromAny(value)))
-            }
-            
-            // dynamic realm user function call
-            user.functions[dynamicMember: name](argsBson) { (result, error) in
-                self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
-            }
+        // use new realm lib (not stitch)
+        var argsBson = [AnyBSON]()
+        args?.forEach { value in
+            //argsBson.append(value as! AnyBSON)
+            print("callFunction (MyMongoStitchClient.swift), args value: \(value)")
+            argsBson.append(AnyBSON(stringLiteral: self.stringFromAny(value)))
+        }
+        
+        // dynamic realm user function call
+        user.functions[dynamicMember: name](argsBson) { (result, error) in
+            self.evaluateAndConvertResponse(error: error, result: result, onCompleted: onCompleted, onError: onError)
         }
     }
 
@@ -823,196 +752,4 @@ class MyMongoStitchClient {
             return
         }
     }
-    
-    //MARK: - Legacy Stitch SDK Auth -
-
-    private func signInAnonymously_s(
-        onCompleted: @escaping ([String:Any])->Void,
-        onError: @escaping (String?)->Void
-    ) {
-        self.auth.login(withCredential: AnonymousCredential()) { authResult in
-            switch authResult {
-            case .success(let user):
-                onCompleted(user.toMap())
-                break
-                
-            case .failure(let error):
-                onError("\(error)")
-                break
-            }
-        }
-    }
-
-    private func signInWithUsernamePassword_s(
-        username: String,
-        password: String,
-        onCompleted: @escaping ([String:Any])->Void,
-        onError: @escaping (String?)->Void
-    ) {
-
-        self.auth.login(
-            withCredential: UserPasswordCredential(withUsername: username, withPassword: password)
-        ) { authResult in
-            switch authResult {
-            case .success(let user):
-                onCompleted(user.toMap())
-                break
-                
-            case .failure(let error):
-                onError("UsernamePassword Provider Login failed \(error)")
-                break
-            }
-        }
-    }
-
-    private func signInWithGoogle_s(
-        authCode: String,
-        onCompleted: @escaping ([String:Any])->Void,
-        onError: @escaping (String?)->Void
-        ) {
-        
-        self.auth.login(
-            withCredential: GoogleCredential(withAuthCode: authCode)
-        ) { authResult in
-            switch authResult {
-            case .success(let user):
-                onCompleted(user.toMap())
-                break
-                
-            case .failure(let error):
-                onError("Google Provider Login failed \(error)")
-                break
-            }
-        }
-    }
-
-
-    func signInWithFacebook_s(
-        accessToken: String,
-        onCompleted: @escaping ([String:Any])->Void,
-        onError: @escaping (String?)->Void
-        ) {
-        
-        self.auth.login(
-            withCredential: FacebookCredential(withAccessToken: accessToken)
-        ) { authResult in
-            switch authResult {
-            case .success(let user):
-                onCompleted(user.toMap())
-                break
-                
-            case .failure(let error):
-                onError("Facebook Provider Login failed \(error)")
-                break
-            }
-        }
-    }
-    
-    func signInWithJWT_s(
-        accessToken: String,
-        onCompleted: @escaping ([String:Any])->Void,
-        onError: @escaping (String?)->Void
-        ) {
-        
-        self.auth.login(
-            withCredential: CustomCredential(withToken: accessToken)
-        ) { authResult in
-            switch authResult {
-            case .success(let user):
-                onCompleted(user.toMap())
-                break
-                
-            case .failure(let error):
-                onError("Facebook Provider Login failed \(error)")
-                break
-            }
-        }
-    }
-
-    private func signInWithCustomFunction_s(
-        json: String,
-        onCompleted: @escaping ([String:Any])->Void,
-        onError: @escaping (String?)->Void
-    ){
-//        var payload = RealmSwift.Document()
-//        var map = [String:AnyObject]()
-//      //  do{
-//            if let data = json.data(using: .utf8) {
-//                    do {
-//                        map = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as! [String:AnyObject]
-//                    } catch {
-//                        print("Something went wrong")
-//                    }
-//                for (key,value) in map{
-//                    payload[key] = value as? AnyBSON
-//                }
-//        }
-//            catch{
-//            onError("Failed to send Payload")
-//        }
-        
-//        CustomCredential(withToken: accessToken)
-        
-         var payload = Document()
-        
-        do{
-            payload = try Document.init(fromJSON: json)
-        }
-        catch{
-            
-        }
-
-        let credential = FunctionCredential.init(payload: payload)
-        
-     
-//            FunctionCredential(payload: payload)
-        
-//        self.app.login(credentials: Credentials.function(payload: payload)
-//        ) { authResult in
-//            switch authResult {
-//               case .success(let user):
-//                   onCompleted(user.toMap())
-//                   break
-//
-//               case .failure(let error):
-//                   onError("Custom Function Provider Login failed \(error)")
-//                   break
-//               }
-//        }
-
-
-        self.auth.login(
-            withCredential: credential
-        ) { authResult in
-            switch authResult {
-            case .success(let user):
-                onCompleted(user.toMap())
-                break
-
-            case .failure(let error):
-                onError("Custom Function Provider Login failed \(error)")
-                break
-            }
-        }
-            
-    }
-
-    private func logout_s(
-        onCompleted: @escaping (Bool)->Void,
-        onError: @escaping (String?)->Void
-    ) {
-        self.auth.logout { result in
-            switch result {
-            case .success(_):
-                onCompleted(true)
-                break
-                
-            case .failure(let error):
-                onError("Cannot logout user: \(error)")
-                break
-            }
-        }
-        
-    }
 }
-
