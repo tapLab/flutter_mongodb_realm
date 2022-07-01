@@ -11,6 +11,7 @@ import StitchCore
 import StitchRemoteMongoDBService
 
 import RealmSwift
+import Realm
 
 
 
@@ -316,7 +317,7 @@ class MyMongoStitchClient {
 //        }
     }
     
-    func getUser() -> StitchUser? {
+    func getUser() -> RLMUser? {
         return self.app.currentUser
     }
     
