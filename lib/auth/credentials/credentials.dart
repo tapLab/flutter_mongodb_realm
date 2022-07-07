@@ -1,4 +1,4 @@
-export 'stitch_credential.dart';
+export 'realm_credential.dart';
 export 'anonymous_credential.dart';
 export 'user_password_credentinal.dart';
 export 'google_credential.dart';
@@ -12,25 +12,24 @@ import '../auth.dart';
 
 class Credentials {
   // ignore: deprecated_member_use_from_same_package
-  static StitchCredential anonymous() => AnonymousCredential();
+  static RealmCredential anonymous() => AnonymousCredential();
 
-  static StitchCredential emailPassword(String username, String password) =>
+  static RealmCredential emailPassword(String username, String password) =>
       // ignore: deprecated_member_use_from_same_package
       UserPasswordCredential(username: username, password: password);
 
-  static StitchCredential google(
-          {String serverClientId, List<String> scopes}) =>
+  static RealmCredential google({String serverClientId, List<String> scopes}) =>
       // ignore: deprecated_member_use_from_same_package
       GoogleCredential(serverClientId: serverClientId, scopes: scopes);
 
-  static StitchCredential facebook(String accessToken) =>
+  static RealmCredential facebook(String accessToken) =>
       // ignore: deprecated_member_use_from_same_package
       FacebookCredential(accessToken);
 
   // ignore: deprecated_member_use_from_same_package
-  static StitchCredential jwt(String token) => CustomJwtCredential(token);
+  static RealmCredential jwt(String token) => CustomJwtCredential(token);
 
-  static StitchCredential customFunction(MongoDocument arguments) =>
+  static RealmCredential customFunction(MongoDocument arguments) =>
       // ignore: deprecated_member_use_from_same_package
       FunctionCredential(arguments);
 }

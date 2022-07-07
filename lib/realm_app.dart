@@ -20,7 +20,7 @@ class RealmApp {
 
   static MongoRealmAuth _auth;
 
-  Future<CoreRealmUser> login(StitchCredential credential) async {
+  Future<CoreRealmUser> login(RealmCredential credential) async {
     // ignore: deprecated_member_use_from_same_package
     return _auth.loginWithCredential(credential);
   }

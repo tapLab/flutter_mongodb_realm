@@ -114,7 +114,7 @@ class MongoDB {
 
   Future<AppUser> authenticate(
       {required String username, required String password}) async {
-    print('yyy mongodb login');
+    print('mongodb login');
     await _app.login(Credentials.emailPassword(username, password));
 
     return await getUser();
@@ -122,7 +122,7 @@ class MongoDB {
 
   Future<void> logout() async {
     try {
-      print('yyy mongodb logout');
+      print('mongodb logout');
       await _app.logout();
     } catch (e) {
       print('logout error -> maybe offline?, error: $e');
@@ -143,7 +143,8 @@ class MongoDB {
       print('getUser (mongo_db.dart) -> _app.currentUser: $_app');
       CoreRealmUser? realmUser = await _app.currentUser;
       if (realmUser != null) {
-        print('getUser -> realmUser: $realmUser');
+        print(
+            'getUser -> realmUser id: ${realmUser.id}, deviceId: ${realmUser.deviceId}, profile [firstName:${realmUser.profile.firstName}, lastName:${realmUser.profile.lastName}, email:${realmUser.profile.email}, name:${realmUser.profile.name}, birthday:${realmUser.profile.birthday}, gender:${realmUser.profile.gender}, maxAge:${realmUser.profile.maxAge}, minAge:${realmUser.profile.minAge}, pictureUrl:${realmUser.profile.pictureUrl}]');
         return AppUser(realmUser: realmUser);
       }
     } catch (e) {

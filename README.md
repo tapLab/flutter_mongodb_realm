@@ -3,6 +3,7 @@
 Unofficial Flutter plugin for using MongoDB Realm services on Android, iOS and web.
 
 ## Getting started
+
 For using it on your app:
 
 ```dart
@@ -12,60 +13,69 @@ import 'package:flutter_mongodb_realm/flutter_mongo_realm.dart';
 For API reference [check here](https://pub.dartlang.org/documentation/flutter_mongodb_realm/latest/)
 
 The minimum requirements are:
- - Android 5.0 (API 21)
- - iOS 11.0
+
+-   Android 5.0 (API 21)
+-   iOS 13.0
 
 ## Setup
+
 Doesn't require any setup besides adding as a dependency
 Web integration automatically!
 
 ## Supported Features
 
 **Database support (MongoDB Atlas):**
-* Insert
-* Find
-* Delete
-* Update
-* Watch (also to specified IDs or with Filter)
-* Aggregate \[X]
 
+-   Insert
+-   Find
+-   Delete
+-   Update
+-   Watch (also to specified IDs or with Filter)
+-   Aggregate \[X]
 
 **Auth Providers:**
-* Email/Password
-* Anonymously
-* Google \[X]
-* Facebook \[X]
-* JWT
-* Custom Authentication Function
+
+-   Email/Password
+-   Anonymously
+-   Google \[X]
+-   Facebook \[X]
+-   JWT
+-   Custom Authentication Function
 
 **Authentication:**
-* Auth Listener
-* Reset Password
-* Login/Sign in/Logout
+
+-   Auth Listener
+-   Reset Password
+-   Login/Sign in/Logout
 
 <b>Functions</b>
-* Calling a Realm function
+
+-   Calling a Realm function
 
 <b>Note:</b> Other more features will come in the future :)
 
 <b>Note:</b> \[X] = Not implemented on Web
 
 ## Usage
+
 ### Initialization
+
 Inorder to connect a RealmApp to flutter add your main function:
+
 ```dart
 main() async{
   // ADD THESE 2 LINES
   WidgetsFlutterBinding.ensureInitialized();
   await RealmApp.init(<your_app_id>);
-  
+
   // other configurations..
-  
+
   runApp(MyApp());
 }
 ```
 
 In order to use the client define:
+
 ```dart
   final client = MongoRealmClient();
 ```
@@ -73,11 +83,13 @@ In order to use the client define:
 ### Authentication
 
 In order to use authentication-related operations you have to use `RealmApp` object:
+
 ```dart
 final Realm app = RealmApp();
 ```
 
 You can retrieve the current logged user by:
+
 ```dart
 final user = app.currentUser;
 
@@ -87,30 +99,34 @@ final userEmail = user.profile.email;
 ```
 
 #### Login
+
 You can log in using the following providers:
-* Anonymous:
+
+-   Anonymous:
+
 ```dart
 CoreRealmUser mongoUser = await app.login(Credentials.anonymous());
 ```
 
-* Email\Password:
+-   Email\Password:
+
 ```dart
 CoreRealmUser mongoUser = await app.login(
   Credentials.emailPassword(username: <email_address>, password: <password>));
 ```
 
-* Facebook:
+-   Facebook:
 
 For login with Facebook import the required flutter's package and configure in the native side as their instructions.
 
 usage:
+
 ```dart
 CoreRealmUser mongoUser = await app.login(
   Credentials.facebook(<access_token>));
 ```
 
-
-* Google:
+-   Google:
 
 <b>
     Inorder to make Google login works, please follow the follwing instructions use the following:<br><br>
@@ -122,14 +138,17 @@ CoreRealmUser mongoUser = await app.login(
 </b>
 
 calling on flutter:
+
 ```dart
 CoreRealmUser mongoUser = await app.login(
   Credentials.google(
-    serverClientId: <Google Server Client Id>, // just the start from "<ID>.apps.googleusercontent.com"   
+    serverClientId: <Google Server Client Id>, // just the start from "<ID>.apps.googleusercontent.com"
     scopes: <list of scopes>,
 ));
 ```
+
 in pubspec.yaml:
+
 ```
 .. (other dependencies)
 google_sign_in:
@@ -138,21 +157,23 @@ google_sign_in:
     path: packages/google_sign_in
     ref: server-auth-code
 ```
+
 ```dart
 CoreRealmUser mongoUser = await app.login(
   Credentials.google(
-    serverClientId: <Google Server Client Id>, // just the start from "<ID>.apps.googleusercontent.com"   
+    serverClientId: <Google Server Client Id>, // just the start from "<ID>.apps.googleusercontent.com"
     scopes: <list of scopes>,
 ));
 ```
 
+-   Custom JWT:
 
-* Custom JWT:
 ```dart
 CoreRealmUser mongoUser = await app.login(Credentials.jwt(<token>);
 ```
 
-* Custom (Auth) Function:
+-   Custom (Auth) Function:
+
 ```dart
 MongoDocument payload = MongoDocument({
   "username": "bob"
@@ -163,6 +184,7 @@ CoreRealmUser mongoUser = await app.login(Credentials.function(payload);
 <b>NOTE: In any case , if mongoUser != null the login was successful.</b>
 
 #### Register
+
 Register a user with Email\Password
 
 ```dart
@@ -171,19 +193,24 @@ CoreRealmUser mongoUser = await app.registerWithEmail(
 ```
 
 #### Logout
+
 ```dart
 await app.currentUser.logout();   // Logout the current user
 ```
 
 #### Reset Password
+
 You can send an email to reset user password:
 (email must be linked to an existing account)
+
 ```dart
 await app.sendResetPasswordEmail(<YOUR_DESIRED_EMAIL>);
 ```
 
 #### Auth Listener
+
 You can be notified when the auth state changes, such as login/logout..
+
 ```dart
 /// for using as smart navigation according to user logged in or not
 StreamBuilder _authBuilder(BuildContext context) {
@@ -216,11 +243,15 @@ StreamBuilder _authBuilder(BuildContext context) {
 ```
 
 ### Database
+
 To get access to a collection:
+
 ```dart
   final collection = client.getDatabase(<database_name>).getCollection(<collection_name>);
 ```
+
 #### Insert
+
 ```dart
 
 collection.insertOne(MongoDocument({
@@ -234,7 +265,9 @@ collection.insertMany(documents);
 ```
 
 #### Find
+
 filtering can be used with QuerySelector class for more robust code
+
 ```dart
 
 // fetch all document in the collection
@@ -284,7 +317,9 @@ int size = await collection.count({
 ```
 
 #### Delete
+
 filtering can be used with QuerySelector class for more robust code
+
 ```dart
 // fetch all documents in the collection
 var deletedDocs = await collection.deleteMany({});
@@ -293,12 +328,14 @@ var deletedDocs = await collection.deleteMany({});
 var deletedDocs = await collection.deleteOne({"age": 24});
 
 // fetch all document in the collection applying some filter
-var deletedDocs = 
+var deletedDocs =
   await collection.deleteMany({"age": QuerySelector.gte(24)});
 ```
 
 #### Update
+
 Updating the only first matched document:
+
 ```dart
 await collection.updateOne(
   // adding a filter (optional)
@@ -313,6 +350,7 @@ await collection.updateOne(
 
 );
 ```
+
 Updating the only all matched documents:
 
 ```dartawait collection.updateMany(
@@ -330,7 +368,7 @@ Updating the only all matched documents:
   update: UpdateOperator.pull({
      "favs": QueryOperator.in$(['apples'])
   });
-  
+
   // adding 'tomatoes' & 'onions into 'favs' array
   update: UpdateOperator.push({
      "favs": ArrayModifier.each(['tomatoes','onions'])
@@ -340,8 +378,8 @@ Updating the only all matched documents:
 
 #### Watch
 
-
 First, Get the stream to subscribed to any document change in the collection
+
 ```dart
 final stream = collection.watch();
 
@@ -353,8 +391,9 @@ final stream2 = myCollection.watch(ids: ["5eca2d9fff448a4cbf8f6627"]);
 final stream3 = myCollection.watch(ids: ["22", "8"], asObjectIds: false);
 ```
 
-OR get the stream to subscribed to  a part of the collection applying
+OR get the stream to subscribed to a part of the collection applying
 filter on the listened documents
+
 ```dart
 final streamFilter = collection.watchWithFilter({
   "age": QuerySelector.lte(26)
@@ -362,17 +401,20 @@ final streamFilter = collection.watchWithFilter({
 ```
 
 Afterwards, set a listener to a change in the collection
+
 ```dart
 stream.listen((data) {
   // data contains JSON string of the document that was changed
   var fullDocument = MongoDocument.parse(data);
-  
+
   // Do other stuff...
 });
 ```
 
 #### Aggregation
+
 define Pipeline Stages for aggregation, i.e:
+
 ```dart
 List<PipelineStage> pipeline = [
   PipelineStage.addFields({
@@ -387,11 +429,13 @@ List<PipelineStage> pipeline = [
 ```
 
 And then set the pipelines stages to the aggregate function:
+
 ```dart
  var list = await collection.aggregate(pipeline);
 ```
 
 Another usages (not all stages are supported):
+
 ```
 List<PipelineStage> pipeline = [
   PipelineStage.skip(2),
@@ -419,14 +463,16 @@ List<PipelineStage> pipeline = [
 ];
 ```
 
-
-
 ### Functions
+
 for calling a defined Realm function "sum" with argument 3&4
+
 ```dart
 var result = await client.callFunction("sum", args: [3, 4])
 ```
+
 You can also add a timeout (in ms), i.e 60 seconds:
+
 ```dart
 var result = await client.callFunction("sum", args: [3, 4], requestTimeout: 60000)
 ```
@@ -435,8 +481,6 @@ var result = await client.callFunction("sum", args: [3, 4], requestTimeout: 6000
 
 > If you found this project helpful or you learned something from the source code and want to thank me, consider buying me a cup of :coffee:
 >
-> - [PayPal](https://www.paypal.me/kfiross/)
-
-
+> -   [PayPal](https://www.paypal.me/kfiross/)
 
 ### Note: flutter_mongo_realm is not directly and/or indirectly associated/affiliated with MongoDB<sup>TM</sup> , Flutter or Google LLC.

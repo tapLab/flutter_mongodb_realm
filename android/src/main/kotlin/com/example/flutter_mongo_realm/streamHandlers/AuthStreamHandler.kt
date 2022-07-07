@@ -1,51 +1,23 @@
-package com.example.flutter_mongo_stitch.streamHandlers
+package com.example.flutter_mongo_realm.streamHandlers
 
 import android.os.Handler
-//import com.mongodb.stitch.core.services.mongodb.remote.ChangeEvent
 
 import io.flutter.plugin.common.EventChannel
 import org.bson.BsonValue
 import org.bson.Document
 import android.os.Looper
-import com.example.flutter_mongo_stitch.MyMongoStitchClient
-import com.example.flutter_mongo_stitch.toMap
+import com.example.flutter_mongo_realm.MyMongoRealmClient
+import com.example.flutter_mongo_realm.toMap
 import io.realm.mongodb.App
-//import com.mongodb.stitch.android.core.StitchAppClient
-//import com.mongodb.stitch.android.core.auth.StitchAuth
-//import com.mongodb.stitch.android.core.auth.StitchAuthListener
-//import com.mongodb.stitch.android.core.auth.StitchUser
 import io.realm.mongodb.AuthenticationListener
 import io.realm.mongodb.User
 
-class AuthStreamHandler(private val client: MyMongoStitchClient, private val app: App, val arguments: Any?)
+class AuthStreamHandler(private val client: MyMongoRealmClient, private val app: App, val arguments: Any?)
     : EventChannel.StreamHandler {
 
     private var eventSink: EventChannel.EventSink? = null
 
     private val listener = object : AuthenticationListener {
-
-//        override fun onActiveUserChanged(auth: StitchAuth?, currentActiveUser: StitchUser?, previousActiveUser: StitchUser?) {
-//            //super.onActiveUserChanged(auth, currentActiveUser, previousActiveUser)
-//            Handler(Looper.getMainLooper()).post {
-//                if (auth?.user == null){
-//                    eventSink!!.success(null)
-//                }
-//                else {
-//                    eventSink!!.success(auth.user!!.toMap())
-//                }
-//            }
-//        }
-//
-//        override fun onAuthEvent(auth: StitchAuth?) {
-//            Handler(Looper.getMainLooper()).post {
-//                if (auth?.user == null){
-//                    eventSink!!.success(null)
-//                }
-//                else {
-//                    eventSink!!.success(auth.user!!.toMap())
-//                }
-//            }
-//        }
 
         override fun loggedIn(user: User?) {
             Handler(Looper.getMainLooper()).post {

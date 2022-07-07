@@ -1,6 +1,6 @@
 //
 //  FlutterStreamsChannel.swift
-//  flutter_mongo_stitch
+//  flutter_mongo_realm
 //
 //  Created by kfir Matityahu on 25/04/2020.
 //

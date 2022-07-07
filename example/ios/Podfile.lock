@@ -3,42 +3,11 @@ PODS:
   - flutter_mongodb_realm (0.0.1):
     - Flutter
     - RealmSwift (= 10.27.0)
-    - StitchSDK (= 6.4.0)
-  - mongo-embedded-c-driver (1.13.0-4.0.4)
-  - mongo_embedded (4.0.4)
-  - mongoc_embedded (4.0.4):
-    - mongo-embedded-c-driver (~> 1.13.0-4.0.4)
-    - mongo_embedded (~> 4.0.4)
-  - MongoMobile (0.1.0):
-    - mongo_embedded (~> 4.0.4)
-    - mongoc_embedded (~> 4.0.4)
-    - MongoSwift (~> 0.1.0)
-  - MongoSwift (0.1.0):
-    - mongo-embedded-c-driver (~> 1.13.0-4.0.0)
   - Realm (10.27.0):
     - Realm/Headers (= 10.27.0)
   - Realm/Headers (10.27.0)
   - RealmSwift (10.27.0):
     - Realm (= 10.27.0)
-  - StitchCore (6.4.0):
-    - StitchCoreSDK (= 6.4.0)
-  - StitchCoreLocalMongoDBService (6.4.0):
-    - MongoMobile (= 0.1.0)
-    - StitchCoreSDK (= 6.4.0)
-  - StitchCoreRemoteMongoDBService (6.4.0):
-    - StitchCoreLocalMongoDBService (= 6.4.0)
-    - StitchCoreSDK (= 6.4.0)
-  - StitchCoreSDK (6.4.0):
-    - MongoSwift (= 0.1.0)
-  - StitchRemoteMongoDBService (6.4.0):
-    - StitchCore (= 6.4.0)
-    - StitchCoreRemoteMongoDBService (= 6.4.0)
-  - StitchSDK (6.4.0):
-    - StitchSDK/StitchSDK (= 6.4.0)
-  - StitchSDK/StitchRemoteMongoDBService (6.4.0):
-    - StitchRemoteMongoDBService (= 6.4.0)
-  - StitchSDK/StitchSDK (6.4.0):
-    - StitchSDK/StitchRemoteMongoDBService
   - streams_channel (0.0.1):
     - Flutter
 
@@ -49,19 +18,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - mongo-embedded-c-driver
-    - mongo_embedded
-    - mongoc_embedded
-    - MongoMobile
-    - MongoSwift
     - Realm
     - RealmSwift
-    - StitchCore
-    - StitchCoreLocalMongoDBService
-    - StitchCoreRemoteMongoDBService
-    - StitchCoreSDK
-    - StitchRemoteMongoDBService
-    - StitchSDK
 
 EXTERNAL SOURCES:
   Flutter:
@@ -73,22 +31,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  flutter_mongodb_realm: 592021151bb76c6115d1400e59ba62010b8d9172
-  mongo-embedded-c-driver: b46360baa15fc142baae80628822f26663220bde
-  mongo_embedded: e413134eb6b60544e7278add03007f8fe384a00c
-  mongoc_embedded: 41aadbb756b07070d6f0471192a84750cb42c580
-  MongoMobile: 988e8d2fd322761d6358570dde8a2b3d44801823
-  MongoSwift: e20f86eae1beb06bbba49c2d73bb570961cc4c85
+  flutter_mongodb_realm: 9a3e5a434e7491342ca1147c7ae76a2764a50c05
   Realm: 9ca328bd7e700cc19703799785e37f77d1a130f2
   RealmSwift: 271de77b09a73c5e46ee3252283878153bd5d288
-  StitchCore: 344f59b617dd5be8c32f0a2fdef39fb96591fc33
-  StitchCoreLocalMongoDBService: 26c339ea689d9633b33e266274406e7b4c3f2786
-  StitchCoreRemoteMongoDBService: e328908dde887cb3a9e3465793b37b69cb19c0e7
-  StitchCoreSDK: 4c4b847470229535a66f8ba6b2911c2eafc0d866
-  StitchRemoteMongoDBService: f5befbafb01720c4d7193e054907fa0ebff569f0
-  StitchSDK: 198397b6400c1fdd58e3e78300fe60374c700fe9
   streams_channel: 16855ffd0568eded9563b2fec6a1bfa94420b353
 
 PODFILE CHECKSUM: 86305cf86c5725d0610a25f12c28fc5a32082a06
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

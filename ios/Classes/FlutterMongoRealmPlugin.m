@@ -1,4 +1,4 @@
-#import "FlutterMongoStitchPlugin.h"
+#import "FlutterMongoRealmPlugin.h"
 #if __has_include(<flutter_mongodb_realm/flutter_mongodb_realm-Swift.h>)
 #import <flutter_mongodb_realm/flutter_mongodb_realm-Swift.h>
 #else
@@ -8,8 +8,8 @@
 #import "flutter_mongodb_realm-Swift.h"
 #endif
 
-@implementation FlutterMongoStitchPlugin
+@implementation FlutterMongoRealmPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  [SwiftFlutterMongoStitchPlugin registerWithRegistrar:registrar];
+  [SwiftFlutterMongoRealmPlugin registerWithRegistrar:registrar];
 }
 @end

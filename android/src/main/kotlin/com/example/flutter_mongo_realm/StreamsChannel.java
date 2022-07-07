@@ -1,4 +1,4 @@
-package com.example.flutter_mongo_stitch;
+package com.example.flutter_mongo_realm;
 
 //  Copyright (c) 2018 Loup Inc.
 //  Licensed under Apache License v2.0

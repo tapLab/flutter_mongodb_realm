@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:bson/bson.dart';
-import 'package:extension/enum.dart';
+import 'package:extension/extension.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_mongodb_realm/database/pipeline_stage.dart';
 

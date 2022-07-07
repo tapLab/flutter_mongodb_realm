@@ -14,7 +14,7 @@ class AuthenticationBloc
       if (event is LoggedIn) {
         emit(AuthenticationLoading());
         final AppUser user = await realmRepository.getUser();
-        print('AuthenticationAuthenticated');
+        print('AuthenticationAuthenticated, user: $user');
 
         emit(AuthenticationAuthenticated(user: user));
       }

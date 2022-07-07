@@ -1,4 +1,4 @@
-package com.example.flutter_mongo_stitch_example
+package com.example.flutter_mongodb_realm_example
 
 //import androidx.annotation.NonNull;
 //import io.flutter.embedding.android.FlutterActivity

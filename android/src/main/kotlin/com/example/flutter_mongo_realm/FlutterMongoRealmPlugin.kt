@@ -1,4 +1,4 @@
-package com.example.flutter_mongo_stitch
+package com.example.flutter_mongo_realm
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -8,26 +8,23 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
-//import com.mongodb.stitch.android.core.Stitch
-//import com.mongodb.stitch.android.services.mongodb.remote.RemoteMongoClient
 import io.flutter.plugin.common.EventChannel
 import android.content.Context
 import android.util.Log
-import com.example.flutter_mongo_stitch.streamHandlers.AuthStreamHandler
-import com.example.flutter_mongo_stitch.streamHandlers.StreamHandler
+import com.example.flutter_mongo_realm.streamHandlers.AuthStreamHandler
+import com.example.flutter_mongo_realm.streamHandlers.StreamHandler
 import io.realm.Realm
-//import com.mongodb.stitch.android.core.StitchAppClient
 
 import io.realm.mongodb.App
 import io.realm.mongodb.AppConfiguration
 import io.realm.mongodb.AppException
 import io.realm.mongodb.User
 
-/** FlutterMongoStitchPlugin */
-public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
+/** FlutterMongoRealmPlugin */
+public class FlutterMongoRealmPlugin: FlutterPlugin, MethodCallHandler {
 
     private lateinit var app: App;
-    private lateinit var client: MyMongoStitchClient
+    private lateinit var client: MyMongoRealmClient
     private lateinit var appContext: Context
 
     /// The MethodChannel that will the communication between Flutter and native Android
@@ -40,7 +37,7 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
 
-        channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "flutter_mongo_stitch")
+        channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "flutter_mongo_realm")
         channel.setMethodCallHandler(this)
 
         appContext = flutterPluginBinding.applicationContext
@@ -72,8 +69,8 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
     companion object {
         @JvmStatic
         fun registerWith(registrar: Registrar) {
-            val channel = MethodChannel(registrar.messenger(), "flutter_mongo_stitch")
-            channel.setMethodCallHandler(FlutterMongoStitchPlugin())
+            val channel = MethodChannel(registrar.messenger(), "flutter_mongo_realm")
+            channel.setMethodCallHandler(FlutterMongoRealmPlugin())
         }
     }
 
@@ -100,14 +97,17 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
             "signInWithFacebook" -> signInWithFacebook(call, result)
             "signInWithCustomJwt" -> signInWithCustomJwt(call, result)
             "signInWithCustomFunction" -> signInWithCustomAuthFunction(call, result)
-
-            "registerWithEmail" -> registerWithEmail(call, result)
             "logout" -> logout(result)
-            "getUserId" -> getUserId(result)
-            "getUser" -> getUser(result)
+
+            // registration
+            "registerWithEmail" -> registerWithEmail(call, result)
             "sendResetPasswordEmail" -> sendResetPasswordEmail(call, result)
 
-            // Stitch Functions
+            // user information
+            "getUserId" -> getUserId(result)
+            "getUser" -> getUser(result)
+
+            // mongoDB functions
             "callFunction" -> callFunction(call, result)
 
             else -> result.notImplemented()
@@ -138,7 +138,7 @@ public class FlutterMongoStitchPlugin: FlutterPlugin, MethodCallHandler {
         )
 
 
-        client = MyMongoStitchClient(mongoClient, app)
+        client = MyMongoRealmClient(mongoClient, app)
 
 
         result.success(true)

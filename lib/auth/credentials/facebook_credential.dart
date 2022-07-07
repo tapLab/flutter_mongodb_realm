@@ -1,7 +1,7 @@
-import 'stitch_credential.dart';
+import 'realm_credential.dart';
 
 @deprecated
-class FacebookCredential extends StitchCredential {
+class FacebookCredential extends RealmCredential {
   final String accessToken;
 
   FacebookCredential(this.accessToken);

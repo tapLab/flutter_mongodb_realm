@@ -30,6 +30,9 @@ class _LoginFormState extends State<LoginForm> {
     if (kDebugMode) {
       _usernameController.text = ''; // insert preset user name here...
       _passwordController.text = ''; // insert preset password here...
+
+      _usernameController.text = 'stephan@taplab.de';
+      _passwordController.text = 'uaz9cvr_JKP1qjx3khb';
     }
     super.initState();
   }

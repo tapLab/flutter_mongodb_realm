@@ -1,9 +1,9 @@
 import 'package:flutter_mongodb_realm/database/mongo_document.dart';
 
-import 'stitch_credential.dart';
+import 'realm_credential.dart';
 
 @deprecated
-class FunctionCredential extends StitchCredential {
+class FunctionCredential extends RealmCredential {
   final MongoDocument arguments;
 
   FunctionCredential(this.arguments);

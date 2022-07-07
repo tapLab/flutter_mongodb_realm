@@ -2,17 +2,14 @@ import Flutter
 import UIKit
 
 import Foundation
-import MongoSwift
-import StitchCore
-import StitchRemoteMongoDBService
 import RealmSwift
 
-public class SwiftFlutterMongoStitchPlugin: NSObject, FlutterPlugin {
-    var client: MyMongoStitchClient?
+public class SwiftFlutterMongoRealmPlugin: NSObject, FlutterPlugin {
+    var client: MyMongoRealmClient?
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "flutter_mongo_stitch", binaryMessenger: registrar.messenger())
-        let instance = SwiftFlutterMongoStitchPlugin()
+        let channel = FlutterMethodChannel(name: "flutter_mongo_realm", binaryMessenger: registrar.messenger())
+        let instance = SwiftFlutterMongoRealmPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
         
         
@@ -25,16 +22,12 @@ public class SwiftFlutterMongoStitchPlugin: NSObject, FlutterPlugin {
             if let args = arguments as? Dictionary<String, Any> {
                 if let handlerName = args["handler"] as? String{
                     switch(handlerName){
-                    case "watchCollection":
-                        return StreamHandler(client: instance.client!) // StreamHandler is an instance FlutterStreamHandler
+                    // TODO: build RLM variant of StreamHandler
+                    // case "watchCollection":
+                    //    return StreamHandler(client: instance.client!) // StreamHandler is an instance FlutterStreamHandler
                     
                     case "auth":
-//                        if #available(iOS 13.0, *) {
-//                            return AuthStreamHandlerRLM(realmApp: instance.client!.app)
-//                        } else {
-                            // Fallback on earlier versions
-                            return AuthStreamHandler(appClient: instance.client!.appClient)
-//                        }
+                      return AuthStreamHandlerRLM(realmApp: instance.client!.app)
                     
                     default:
                         return nil
@@ -173,15 +166,8 @@ public class SwiftFlutterMongoStitchPlugin: NSObject, FlutterPlugin {
         let app = App(id: clientAppId!)
         let mongoClientRLM = app.currentUser?.mongoClient("mongodb-atlas")
         
-        // todo: remove when removing StitchSDK dependency
-        let stitchAppClient = try! Stitch.initializeDefaultAppClient(withClientAppID: clientAppId!)
+        self.client = MyMongoRealmClient(client: mongoClientRLM, app: app)
         
-        // todo: remove when removing StitchSDK dependency
-        let mongoClient = try? stitchAppClient.serviceClient(
-            fromFactory: remoteMongoClientFactory, withName: "mongodb-atlas"
-        )
-                
-        self.client = MyMongoStitchClient(client: mongoClient!, appClient: stitchAppClient, app: app)
         result(true)
     }
     
@@ -365,21 +351,21 @@ public class SwiftFlutterMongoStitchPlugin: NSObject, FlutterPlugin {
         let collectionName = args["collection_name"] as? String
         let data = args["data"] as? Dictionary<String, Any>
         
-        self.client?.insertDocument(
-            databaseName: databaseName,
-            collectionName: collectionName,
-            data: data,
-            onCompleted: { value in
-                result((value as! ObjectId).hex)
-            },
-            onError: { message in
-                result(FlutterError(
-                    code: "ERROR",
-                    message: message,
-                    details: nil
-                ))
-        }
-        )
+//        self.client?.insertDocument(
+//            databaseName: databaseName,
+//            collectionName: collectionName,
+//            data: data,
+//            onCompleted: { value in
+//                // TODO: result((value as! ObjectId).hex)
+//            },
+//            onError: { message in
+//                result(FlutterError(
+//                    code: "ERROR",
+//                    message: message,
+//                    details: nil
+//                ))
+//        }
+//        )
         
     }
     
@@ -390,25 +376,25 @@ public class SwiftFlutterMongoStitchPlugin: NSObject, FlutterPlugin {
         let collectionName = args["collection_name"] as? String
         let list = args["list"] as? Array<String>
         
-        self.client?.insertDocuments(
-            databaseName: databaseName,
-            collectionName: collectionName,
-            list: list,
-            onCompleted: { ids in
-                var map:[Int32:String] = [:]
-                for (key,value) in ids! {
-                    map[Int32(key)] = (value as! ObjectId).hex
-                }
-                result(map)
-        },
-            onError: { message in
-                result(FlutterError(
-                    code: "ERROR",
-                    message: message,
-                    details: nil
-                ))
-        }
-        )
+//        self.client?.insertDocuments(
+//            databaseName: databaseName,
+//            collectionName: collectionName,
+//            list: list,
+//            onCompleted: { ids in
+//                var map:[Int32:String] = [:]
+//                for (key,value) in ids! {
+//                    map[Int32(key)] = (value as! ObjectId).hex
+//                }
+//                result(map)
+//        },
+//            onError: { message in
+//                result(FlutterError(
+//                    code: "ERROR",
+//                    message: message,
+//                    details: nil
+//                ))
+//        }
+//        )
     }
     
     func deleteDocument(call: FlutterMethodCall, result: @escaping FlutterResult)  {
@@ -626,9 +612,9 @@ public class SwiftFlutterMongoStitchPlugin: NSObject, FlutterPlugin {
             result(FlutterError(code: "ERROR", message: "", details: nil))
         }
         
-        print("callFunction (SwiftFlutterMongoStitchPlugin.swift), name: \(name!)")
+        print("callFunction (SwiftFlutterMongoRealmPlugin.swift), name: \(name!)")
 
-        // call in MyMongoStitchClient
+        // call in MyMongoRealmClient
         self.client?.callFunction(
             name: name!,
             args: args,

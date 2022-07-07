@@ -1,17 +1,16 @@
-package com.example.flutter_mongo_stitch.streamHandlers
+package com.example.flutter_mongo_realm.streamHandlers
 
 import android.os.Handler
-//import com.mongodb.stitch.core.services.mongodb.remote.ChangeEvent
 
 import io.flutter.plugin.common.EventChannel
 import org.bson.BsonValue
 import org.bson.Document
 import android.os.Looper
-import com.example.flutter_mongo_stitch.MyMongoStitchClient
+import com.example.flutter_mongo_realm.MyMongoRealmClient
 import io.realm.internal.events.ChangeEvent
 
 
-class StreamHandler(val client: MyMongoStitchClient, val arguments: Any?)
+class StreamHandler(val client: MyMongoRealmClient, val arguments: Any?)
     : EventChannel.StreamHandler {
 
     private lateinit var handler: Handler

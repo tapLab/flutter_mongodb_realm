@@ -1,7 +1,7 @@
-import 'stitch_credential.dart';
+import 'realm_credential.dart';
 
 @deprecated
-class CustomJwtCredential extends StitchCredential {
+class CustomJwtCredential extends RealmCredential {
   final String token;
 
   CustomJwtCredential(this.token);

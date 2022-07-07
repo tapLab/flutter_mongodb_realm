@@ -1,4 +1,4 @@
-import 'stitch_credential.dart';
+import 'realm_credential.dart';
 
 @deprecated
-class AnonymousCredential extends StitchCredential {}
+class AnonymousCredential extends RealmCredential {}

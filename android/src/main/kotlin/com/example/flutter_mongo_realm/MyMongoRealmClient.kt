@@ -1,19 +1,9 @@
-package com.example.flutter_mongo_stitch
+package com.example.flutter_mongo_realm
 
 
-//import com.mongodb.stitch.android.core.StitchAppClient
-//import com.mongodb.stitch.android.core.auth.StitchAuth
-//import com.mongodb.stitch.android.core.auth.StitchUser
-//import com.mongodb.stitch.core.auth.providers.anonymous.AnonymousCredential
-//import com.mongodb.stitch.core.auth.providers.userpassword.UserPasswordCredential
 import android.util.Log
 import java.lang.Exception
 import kotlin.collections.HashMap
-//import com.mongodb.stitch.android.core.auth.providers.userpassword.UserPasswordAuthProviderClient
-//import com.mongodb.stitch.android.services.mongodb.remote.*
-//import com.mongodb.stitch.core.auth.providers.facebook.FacebookCredential
-//import com.mongodb.stitch.core.auth.providers.google.GoogleCredential
-//import com.mongodb.stitch.core.services.mongodb.remote.*
 import io.realm.RealmAsyncTask
 import io.realm.mongodb.*
 import io.realm.mongodb.auth.GoogleAuthType
@@ -39,12 +29,10 @@ import io.flutter.plugin.common.MethodChannel.Result
 
 // Basic CRUD..
 
-class MyMongoStitchClient(
+class MyMongoRealmClient(
     private var client: MongoClient?,
     private var app: App
 ) {
-    //   private var auth: StitchAuth = app.currentUser()
-
     /** ========================== Auth-related function  ========================= **/
 
     fun getUser(): User? {
@@ -62,9 +50,9 @@ class MyMongoStitchClient(
 //        emailPassClient.confirmUser(token, tokenId)
 //                .addOnCompleteListener {
 //                    if (it.isSuccessful) {
-//                        Log.d("stitch", "Successfully reset user's password");
+//                        Log.d("realm", "Successfully reset user's password");
 //                    } else {
-//                        Log.e("stitch", "Error resetting user's password:", task.getException());
+//                        Log.e("realm", "Error resetting user's password:", task.getException());
 //                    }
 //
 //                }

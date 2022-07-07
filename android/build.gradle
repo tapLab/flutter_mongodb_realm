@@ -1,4 +1,4 @@
-group 'com.example.flutter_mongo_stitch'
+group 'com.example.flutter_mongo_ream'
 version '1.0-SNAPSHOT'
 
 //def localProperties = new Properties()
@@ -78,10 +78,6 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    // DEPRECATED!! //
-//    implementation 'org.mongodb:stitch-android-sdk:4.5.0'
-
-
 //    implementation 'com.google.android.gms:play-services-auth:18.0.0'
 //    implementation 'com.google.guava:guava:20.0'
 }

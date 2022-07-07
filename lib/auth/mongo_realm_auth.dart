@@ -12,7 +12,7 @@ import '../plugin.dart';
 import 'core_realm_user.dart';
 import 'credentials/credentials.dart';
 
-/// MongoRealmAuth manages authentication for any Stitch based client.
+/// MongoRealmAuth manages authentication for any Realm based client.
 
 class MongoRealmAuth {
   MongoRealmAuth._();
@@ -29,7 +29,7 @@ class MongoRealmAuth {
   /// Logs in as a user with the given credentials associated with an
   /// authentication provider.
   @deprecated
-  Future<CoreRealmUser> loginWithCredential(StitchCredential credential) async {
+  Future<CoreRealmUser> loginWithCredential(RealmCredential credential) async {
     var result;
 
     if (credential is AnonymousCredential) {
